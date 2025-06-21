@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор военных действий</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: "DM Sans", sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .box {
+            width: 90%;
+            max-width: 1200px;
+            height: auto;
+            min-height: 600px;
+            margin: 0 auto;
+            background-color: #B7C1C3;
+            border-radius: 20px;
+            box-shadow: 15px 13px 26px 0px rgba(0,0,0,0.73);
+            padding: 20px;
+        }
+        
+        .columns-container {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .input_v1 {
+            width: 100%;
+            margin-top: 10px;
+            height: 30px;
+            border: 1px solid #CCD6D8;
+            border-radius: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .column1 {
+            width: 30%;
+            padding-right: 15px;
+        }
+        
+        .column2 {
+            width: 45%;
+            padding: 0 15px;
+        }
+        
+        .column3 {
+            width: 25%;
+            padding-left: 15px;
+        }
+        
+        .button {
+            width: 100%;
+            height: 40px;
+            background-color: #747f81;
+            border-radius: 20px;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 10px 9px 35px 1px rgba(0,0,0,0.75);
+            transition: all 0.3s ease;
+        }
+        
+        .button:hover {
+            background-color: #5a6668;
+            transform: translateY(-2px);
+        }
+        
+        .result_block {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+            min-height: 200px;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        .weather-info {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .army-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .army-block {
+            width: 48%;
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .army-block.your {
+            border-left: 4px solid #27ae60;
+        }
+        
+        .army-block.enemy {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .army-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .army-power {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .losses-info {
+            background: #ffe6e6;
+            border-left: 4px solid #ff6b6b;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .support-info {
+            background: #e8f5e8;
+            border-left: 4px solid #4ecdc4;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .stat-line {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        
+        .winner {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .no-results {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 50px 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            border: 2px dashed #bdc3c7;
+        }
+        
+        .guide-block {
+            padding: 15px;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4f1d4 100%);
+            border-radius: 15px;
+            margin-top: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            font-size: 11px;
+        }
+        
+        .guide-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 5px;
+        }
+        
+        .guide-item {
+            margin-bottom: 10px;
+        }
+        
+        .guide-item strong {
+            color: #27ae60;
+        }
+        
+        .guide-desc {
+            font-size: 10px;
+            margin-left: 15px;
+            line-height: 1.3;
+        }
+        
+        .weather-effects {
+            margin-bottom: 8px;
+        }
+        
+        .weather-effects strong {
+            color: #3498db;
+        }
+        
+        .tip {
+            font-size: 10px;
+            color: #7f8c8d;
+            line-height: 1.3;
+        }
+
+        /* Медиа-запросы для адаптивности */
+        @media (max-width: 720px) {
+            body {
+                padding: 10px;
+            }
+            
+            .box {
+                width: 95%;
+                padding: 15px;
+                border-radius: 15px;
+            }
+            
+            .columns-container {
+                flex-direction: column;
+                flex-wrap: wrap;
+            }
+            
+            .column1, .column2, .column3 {
+                width: 100%;
+                padding: 0;
+                margin-bottom: 20px;
+            }
+            
+            /* Порядок колонок: ввод данных, подсказка, результаты */
+            .column1 {
+                order: 1;
+            }
+            
+            .column3 {
+                order: 2;
+            }
+            
+            .column2 {
+                order: 3;
+            }
+            
+            .input_v1 {
+                height: 35px;
+                font-size: 16px; /* Увеличиваем шрифт для лучшего взаимодействия на мобильных */
+                margin-top: 8px;
+            }
+            
+            .button {
+                height: 45px;
+                font-size: 18px;
+                margin-top: 15px;
+            }
+            
+            /* Уменьшаем содержимое подсказки */
+            .guide-block {
+                padding: 12px;
+                font-size: 10px;
+                margin-top: 0;
+            }
+            
+            .guide-title {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+            
+            .guide-item {
+                margin-bottom: 8px;
+            }
+            
+            .guide-desc {
+                font-size: 9px;
+                margin-left: 10px;
+            }
+            
+            .weather-effects {
+                margin-bottom: 6px;
+            }
+            
+            .tip {
+                font-size: 9px;
+            }
+            
+            /* Скрываем часть подробной информации в подсказке на мобильных */
+            .mobile-hide {
+                display: none;
+            }
+            
+            /* Результаты */
+            .result_block {
+                min-height: 150px;
+                padding: 12px;
+                margin-top: 0;
+            }
+            
+            .result-title {
+                font-size: 16px;
+            }
+            
+            .army-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .army-block {
+                width: 100%;
+            }
+            
+            .weather-info {
+                font-size: 14px;
+                padding: 8px;
+            }
+            
+            .winner {
+                font-size: 16px;
+                padding: 12px;
+            }
+            
+            .no-results {
+                padding: 30px 15px;
+            }
+            
+            .no-results div:first-child {
+                font-size: 36px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .box {
+                width: 98%;
+                padding: 12px;
+            }
+            
+            .input_v1 {
+                font-size: 14px;
+            }
+            
+            .button {
+                font-size: 16px;
+            }
+            
+            .guide-block {
+                font-size: 9px;
+                padding: 10px;
+            }
+            
+            .guide-title {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="columns-container">
+            <div class="column1">
+                <input id="your_name" class="input_v1" placeholder="Название вашей страны:" type="text">
+                <input id="target_name" class="input_v1" placeholder="Название страны противника:" type="text">
+                <input id="your_army" class="input_v1" placeholder="Численность вашей армии:" type="number">
+                <input id="target_army" class="input_v1" placeholder="Численность армии противника:" type="number">
+                <input id="your_tecnic" class="input_v1" placeholder="Количество вашей техники:" type="number">
+                <input id="target_tecnic" class="input_v1" placeholder="Количество техники противника:" type="number">
+                <input id="your_wwp" class="input_v1" placeholder="Ваш ВВП (млрд $):" type="number">
+                <input id="target_wwp" class="input_v1" placeholder="ВВП противника (млрд $):" type="number">
+                <select id="time_of_year" class="input_v1">
+                    <option value="">Выберите время года</option>
+                    <option value="Зима">Зима</option>
+                    <option value="Весна">Весна</option>
+                    <option value="Лето">Лето</option>
+                    <option value="Осень">Осень</option>
+                </select>
+                <input id="your_resourses" class="input_v1" placeholder="Ваше снабжение (1-10):" type="number" min="1" max="10" >
+                <input id="target_resourses" class="input_v1" placeholder="Снабжение противника (1-10):" type="number" min="1" max="10" >
+                <input id="fortress" class="input_v1" placeholder="Укрепления противника (0-10):" type="number" min="0" max="10" >
+            </div>
+            <div class="column3">
+                <div class="guide-block">
+                    <div class="guide-title">📋 Руководство</div>
+                    
+                    <div class="guide-item">
+                        <strong>🪖 Армия:</strong>
+                        <div class="guide-desc">Общая численность войск</div>
+                    </div>
+                    
+                    <div class="guide-item">
+                        <strong>🚁 Техника:</strong>
+                        <div class="guide-desc">Боевые машины (×10 к силе)</div>
+                    </div>
+                    
+                    <div class="guide-item">
+                        <strong>💰 ВВП:</strong>
+                        <div class="guide-desc">Влияет на поддержку населения</div>
+                    </div>
+                    
+                    <div class="guide-item">
+                        <strong>📦 Снабжение:</strong>
+                        <div class="guide-desc">Каждый уровень +5.5%</div>
+                    </div>
+                    
+                    <div class="guide-item">
+                        <strong>🏰 Укрепления:</strong>
+                        <div class="guide-desc">Каждый уровень +5.5%</div>
+                    </div>
+                    
+                    <div class="mobile-hide">
+                        <hr style="border: 1px solid #27ae60; margin: 10px 0;">
+                        
+                        <div class="weather-effects">
+                            <strong>⛅ Погодные эффекты:</strong>
+                        </div>
+                        <div class="guide-desc" style="margin-left: 0;">
+                            • <strong>Ясно:</strong> без штрафов<br>
+                            • <strong>Дождь:</strong> -13% армии, -15% техники<br>
+                            • <strong>Туман:</strong> -15% армии, -25% техники<br>
+                            • <strong>Снег:</strong> -20% армии, -30% техники
+                        </div>
+                    </div>
+                    
+                    <hr style="border: 1px solid #3498db; margin: 10px 0;">
+                    
+                    <div class="tip">
+                        <strong>💡 Совет:</strong> Высокий ВВП дает преимущество в поддержке населения
+                    </div>
+                </div>
+            </div>
+            <div class="column2">
+                <div class="result_block" id="result_block">
+                    <div class="result-title">Результаты сражения</div>
+                    <div id="result_content">
+                        <div class="no-results">
+                            <div style="font-size: 48px; margin-bottom: 15px;">⚔️</div>
+                            <div>Нажмите "Начать сражение" чтобы увидеть результаты боя</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="button" onclick="fun1()">Начать сражение</button>
+    </div>
+
+    <script>
+        // Конфигурация погодных условий
+        const weatherConfig = {
+            1: { name: "Дождь", armyModifier: 0.87, techModifier: 0.85 },
+            2: { name: "Ливень", armyModifier: 0.7, techModifier: 0.73 },
+            3: { name: "Ясно", armyModifier: 1, techModifier: 1 },
+            4: { name: "Туман", armyModifier: 0.85, techModifier: 0.75 },
+            5: { name: "Снег", armyModifier: 0.80, techModifier: 0.7 },
+            6: { name: "Метель", armyModifier: 0.65, techModifier: 0.6 }
+        };
+
+        // Конфигурация сезонных модификаторов
+        const seasonConfig = {
+            "Зима": { armyModifier: 0.8, techModifier: 0.7, weatherOptions: 6 },
+            "Весна": { armyModifier: 0.9, techModifier: 0.87, weatherOptions: 4 },
+            "Лето": { armyModifier: 1.1, techModifier: 1, weatherOptions: 4 },
+            "Осень": { armyModifier: 0.9, techModifier: 0.9, weatherOptions: 4 }
+        };
+
+        function fun1() {
+            let y_name = document.getElementById("your_name").value || "Ваша страна";
+            let t_name = document.getElementById("target_name").value || "Противник";
+
+            let y_army = +document.getElementById("your_army").value;
+            let t_army = +document.getElementById("target_army").value;
+            let y_tecnic = +document.getElementById("your_tecnic").value;
+            let t_tecnic = +document.getElementById("target_tecnic").value;
+
+            let y_wwp = +document.getElementById("your_wwp").value;
+            let t_wwp = +document.getElementById("target_wwp").value;
+            let time_of_year = document.getElementById("time_of_year").value;
+
+            let y_resourses = +document.getElementById("your_resourses").value;
+            let t_resourses = +document.getElementById("target_resourses").value;
+            let fortress = +document.getElementById("fortress").value;
+
+            // Проверка на выбор времени года
+            if (!time_of_year) {
+                const resultBlock = document.getElementById("result_block");
+                const resultContent = document.getElementById("result_content");
+                
+                resultBlock.style.border = "3px solid #e74c3c";
+                resultContent.innerHTML = `
+                    <div style="text-align: center; color: #e74c3c; font-size: 18px; font-weight: bold; padding: 50px 20px;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">⚠️</div>
+                        <div>Вы не выбрали время года</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Убираем красную рамку если время года выбрано
+            const resultBlock = document.getElementById("result_block");
+            resultBlock.style.border = "none";
+
+            // Сохраняем изначальные значения для отображения
+            let original_y_army = y_army;
+            let original_t_army = t_army;
+            let original_y_tecnic = y_tecnic;
+            let original_t_tecnic = t_tecnic;
+
+            // Получаем погодные условия
+            const season = seasonConfig[time_of_year];
+            const weatherIndex = Math.floor(Math.random() * season.weatherOptions) + 1;
+            const weather = weatherConfig[weatherIndex];
+
+            // Применяем погодные модификаторы
+            y_army *= weather.armyModifier;
+            t_army *= weather.armyModifier;
+            y_tecnic *= weather.techModifier;
+            t_tecnic *= weather.techModifier;
+
+            // Применяем сезонные модификаторы
+            y_army *= season.armyModifier;
+            t_army *= season.armyModifier;
+            y_tecnic *= season.techModifier;
+            t_tecnic *= season.techModifier;
+
+            // Применяем бонусы от укреплений
+            let fortress_bonus = 1 + (fortress * 0.055);
+            t_army *= fortress_bonus;
+            t_tecnic *= fortress_bonus;
+
+            // Применяем бонусы от снабжения
+            let y_supply_bonus = 1 + (y_resourses * 0.055);
+            let t_supply_bonus = 1 + (t_resourses * 0.055);
+            
+            y_army *= y_supply_bonus;
+            y_tecnic *= y_supply_bonus;
+            t_army *= t_supply_bonus;
+            t_tecnic *= t_supply_bonus;
+
+            let y_a_army = Math.floor(y_army + (y_tecnic * 10));
+            let t_a_army = Math.floor(t_army + (t_tecnic * 10));
+
+            // Штраф за большую разницу в ВВП
+            let gdp_ratio_y = y_wwp / t_wwp;
+            let gdp_ratio_t = t_wwp / y_wwp;
+            
+            let y_gdp_penalty = false;
+            let t_gdp_penalty = false;
+            
+            if (gdp_ratio_t >= 1.2) {
+                y_a_army = Math.floor(y_a_army * 0.9);
+                y_gdp_penalty = true;
+            }
+            if (gdp_ratio_y >= 1.2) {
+                t_a_army = Math.floor(t_a_army * 0.9);
+                t_gdp_penalty = true;
+            }
+
+            // Расчет потерь
+            let lossPercentage1 = (Math.random() * 5) + 10;
+            let lossPercentage2 = (Math.random() * 5) + 10;
+            
+            // Дополнительные потери от плохой погоды
+            const weatherLossPenalty = {
+                "Снег": 3,
+                "Метель": 7
+            };
+            
+            if (weatherLossPenalty[weather.name]) {
+                lossPercentage1 += weatherLossPenalty[weather.name];
+                lossPercentage2 += weatherLossPenalty[weather.name];
+            }
+            
+            let losses1 = Math.round((lossPercentage1 / 100) * y_a_army);
+            let losses2 = Math.round((lossPercentage2 / 100) * t_a_army);
+
+            // Поддержка населения
+            let y_population_support = 100;
+            let t_population_support = 100;
+            
+            y_population_support -= lossPercentage1 * 2.5;
+            t_population_support -= lossPercentage2 * 2.5;
+            
+            let y_gdp_support_penalty = 0;
+            let t_gdp_support_penalty = 0;
+            
+            if (y_wwp < t_wwp) {
+                let disadvantage_percent = ((t_wwp - y_wwp) / y_wwp) * 100;
+                y_gdp_support_penalty = disadvantage_percent / 30;
+                y_population_support -= y_gdp_support_penalty;
+            }
+            
+            if (t_wwp < y_wwp) {
+                let disadvantage_percent = ((y_wwp - t_wwp) / t_wwp) * 100;
+                t_gdp_support_penalty = disadvantage_percent / 30;
+                t_population_support -= t_gdp_support_penalty;
+            }
+            
+            y_population_support = Math.max(0, y_population_support);
+            t_population_support = Math.max(0, t_population_support);
+
+            let y_support_bonus = y_population_support / 100;
+            let t_support_bonus = t_population_support / 100;
+            
+            y_a_army = Math.floor(y_a_army * (1 + y_support_bonus));
+            t_a_army = Math.floor(t_a_army * (1 + t_support_bonus));
+
+            // Определяем победителя
+            let winner = y_a_army > t_a_army ? y_name : 
+                        t_a_army > y_a_army ? t_name : "Ничья";
+
+            // Отображаем результаты
+            displayResults({
+                y_name, t_name, weather: weather.name, time_of_year,
+                y_a_army, t_a_army,
+                losses1, losses2, lossPercentage1, lossPercentage2,
+                y_population_support, t_population_support,
+                y_gdp_support_penalty, t_gdp_support_penalty,
+                y_support_bonus, t_support_bonus,
+                y_gdp_penalty, t_gdp_penalty,
+                winner,
+                original_y_army, original_t_army,
+                original_y_tecnic, original_t_tecnic,
+                fortress, y_resourses, t_resourses
+            });
+        }
+
+        function displayResults(data) {
+            const resultContent = document.getElementById("result_content");
+            
+            resultContent.innerHTML = `
+                <div class="weather-info">
+                    🌤️ Погода: ${data.weather} (${data.time_of_year})
+                </div>
+                
+                <div class="army-stats">
+                    <div class="army-block your">
+                        <div class="army-name">${data.y_name}</div>
+                        <div class="army-power">💪 ${data.y_a_army.toLocaleString()}</div>
+                        <div class="stat-line">Армия: ${data.original_y_army.toLocaleString()}</div>
+                        <div class="stat-line">Техника: ${data.original_y_tecnic.toLocaleString()}</div>
+                        <div class="stat-line">Снабжение: ${data.y_resourses}/10</div>
+                    </div>
+                    <div class="army-block enemy">
+                        <div class="army-name">${data.t_name}</div>
+                        <div class="army-power">💪 ${data.t_a_army.toLocaleString()}</div>
+                        <div class="stat-line">Армия: ${data.original_t_army.toLocaleString()}</div>
+                        <div class="stat-line">Техника: ${data.original_t_tecnic.toLocaleString()}</div>
+                        <div class="stat-line">Укрепления: ${data.fortress}/10</div>
+                    </div>
+                </div>
+                
+                <div class="losses-info">
+                    <strong>💀 Потери в сражении:</strong><br>
+                    ${data.y_name}: ${data.losses1.toLocaleString()} (${data.lossPercentage1.toFixed(1)}%)<br>
+                    ${data.t_name}: ${data.losses2.toLocaleString()} (${data.lossPercentage2.toFixed(1)}%)
+                </div>
+                
+                <div class="support-info">
+                    <strong>👥 Поддержка населения:</strong><br>
+                    ${data.y_name}: ${data.y_population_support.toFixed(1)}% 
+                    ${data.y_gdp_support_penalty > 0 ? `(штраф: -${data.y_gdp_support_penalty.toFixed(1)}%)` : ''}<br>
+                    ${data.t_name}: ${data.t_population_support.toFixed(1)}%
+                    ${data.t_gdp_support_penalty > 0 ? `(штраф: -${data.t_gdp_support_penalty.toFixed(1)}%)` : ''}
+                </div>
+                
+                <div class="support-info">
+                    <strong>⚡ Бонусы к армии:</strong><br>
+                    ${data.y_name}: +${(data.y_support_bonus * 100).toFixed(1)}% от поддержки
+                    ${data.y_gdp_penalty ? ' | -10% от ВВП' : ''}<br>
+                    ${data.t_name}: +${(data.t_support_bonus * 100).toFixed(1)}% от поддержки
+                    ${data.t_gdp_penalty ? ' | -10% от ВВП' : ''}
+                </div>
+                
+                <div class="winner">
+                    🏆 Победитель: ${data.winner}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
